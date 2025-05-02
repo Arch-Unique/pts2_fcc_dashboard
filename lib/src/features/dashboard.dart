@@ -43,7 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SafeArea(
           child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 720),
+          constraints: BoxConstraints(maxWidth: 1100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

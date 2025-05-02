@@ -282,9 +282,9 @@ class TxScreen extends StatelessWidget {
                       if (dtr != null) {
                         curDtr = DateTimeRange(
                             start: DateTime(dtr.start.year, dtr.start.month,
-                                dtr.start.day, 0, 0, 0),
+                                dtr.start.day),
                             end: DateTime(dtr.end.year, dtr.end.month,
-                                dtr.end.day, 23, 59, 59));
+                                dtr.end.day));
                         tec.text =
                             "${DateFormat("dd/MM/yyyy hh:mm:ss").format(curDtr.start)} - ${DateFormat("dd/MM/yyyy hh:mm:ss").format(curDtr.end)}";
                       }
@@ -340,7 +340,7 @@ class TxScreen extends StatelessWidget {
             Expanded(
                 child: Obx(
                    () {
-                    return AppText.medium("${controller.allPumpTrx.map((f) => f.volume).fold(0.0,(a,b) => a+b).toString()} L",
+                    return AppText.medium("${controller.allPumpTrx.map((f) => f.volume).fold(0.0,(a,b) => a+b).toStringAsFixed(2)} L",
                         fontSize: 14, alignment: TextAlign.center);
                   }
                 )),
