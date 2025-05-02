@@ -34,7 +34,10 @@ constraints: BoxConstraints(
               children: [
                 AppText.medium("Pump ${pm.pump}"),
                 Spacer(),
-                AppText.medium(pm.lastFuelGradeName),
+                CurvedContainer(
+                  padding: EdgeInsets.all(8),
+                  color: AppColors.containerColor,
+                  child: AppText.medium(pm.lastFuelGradeName)),
               ],
             ),
             CurvedContainer(
@@ -58,10 +61,10 @@ constraints: BoxConstraints(
                   AppDivider(),
                   Align(
                     alignment: Alignment.center,
-                    child: CurvedContainer(
+                    child: Padding(
                       padding: EdgeInsets.all(8),
-                      color: pm.stateRaw == "idle" ? AppColors.accentColor: pm.stateRaw == "offline" ? AppColors.containerColor: AppColors.primaryColor,
-                      child: AppText.medium(pm.stateRaw.toUpperCase()),
+                      
+                      child: AppText.medium(pm.stateRaw.toUpperCase(),color: pm.stateRaw == "idle" ? AppColors.accentColor: pm.stateRaw == "offline" ? AppColors.grey: AppColors.primaryColor,),
                     ),
                   )
                 ],

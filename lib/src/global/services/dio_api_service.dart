@@ -118,7 +118,8 @@ class DioApiService extends GetxService implements ApiService {
     return hasToken
         ? {
             "Authorization":
-                generateDigestHeader()
+                generateDigestHeader(),
+                "Cookie":"PumpControlTypeCookie=PumpControlTypeTable"
           }
         : {};
   }

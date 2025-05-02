@@ -124,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: EdgeInsets.all(8),
                   margin: EdgeInsets.all(8),
                   color: controller.isConnected.value
-                      ? AppColors.green
+                      ? AppColors.primaryColor
                       : AppColors.red,
                   child: Center(
                     child: AppText.thin(
