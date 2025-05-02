@@ -25,7 +25,7 @@ import 'src/src_barrel.dart';
 void main() async {
   final wd = WidgetsFlutterBinding.ensureInitialized();
    FlutterNativeSplash.preserve(widgetsBinding: wd);
-  await GetStorage.init();
+  await GetStorage.init("pts2fcc");
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // await fcmFunctions.initApp();
