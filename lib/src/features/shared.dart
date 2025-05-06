@@ -26,6 +26,11 @@ constraints: BoxConstraints(
         color: AppColors.containerColor,
         padding: EdgeInsets.all(16),
         margin: EdgeInsets.all(8),
+        onPressed: (){
+          Get.find<DashboardController>().curPump = pm.pump;
+          Get.find<DashboardController>().curDtr = DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now());
+          Get.find<DashboardController>().curMode.value = 2;
+        },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +234,7 @@ class TxItemWidget extends StatelessWidget {
           children: [
             Expanded(
                 child: AppText.thin(
-                    DateFormat("dd/MM/yyyy hh:mm:ss").format(pt.dateTimeStart),alignment: TextAlign.center,
+                    DateFormat("dd/MM/yyyy hh:mm aa").format(pt.dateTimeStart),alignment: TextAlign.center,
                     fontSize: 12)),
             Expanded(
                 child: AppText.thin("${pt.pump} | ${pt.fuelGradeName}",alignment: TextAlign.center,
@@ -241,13 +246,23 @@ class TxItemWidget extends StatelessWidget {
   }
 }
 
-class TxScreen extends StatelessWidget {
-  TxScreen({super.key});
+class TxScreen extends StatefulWidget {
+  const TxScreen({super.key});
+
+  @override
+  State<TxScreen> createState() => _TxScreenState();
+}
+
+class _TxScreenState extends State<TxScreen> {
   final controller = Get.find<DashboardController>();
-  DateTimeRange curDtr =
-      DateTimeRange(start: DateTime(2025), end: DateTime(2025));
   final TextEditingController tec = TextEditingController();
-  int curPump = 1;
+
+
+  @override
+  void initState() {
+    controller.getAllPumpsTransaction();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,9 +275,9 @@ class TxScreen extends StatelessWidget {
                   flex: 1,
                   child: CustomDropdown.days(
                       hint: "",
-                      selectedValue: curPump,
+                      selectedValue: controller.curPump,
                       onChanged: (i) {
-                        curPump = i ?? 0;
+                        controller.curPump = i ?? 0;
                       })),
               Ui.boxWidth(8),
               Expanded(
@@ -275,18 +290,23 @@ class TxScreen extends StatelessWidget {
                     onTap: () async {
                       final dtr = await showDateRangePicker(
                           context: context,
-                          
+
+                          builder: (c,child){
+                            return Theme(
+                              data: ThemeData.dark(),
+                              child: child!);
+                          },
                           firstDate:
                               DateTime.now().subtract(Duration(days: 1800)),
                           lastDate: DateTime.now());
                       if (dtr != null) {
-                        curDtr = DateTimeRange(
+                        controller.curDtr = DateTimeRange(
                             start: DateTime(dtr.start.year, dtr.start.month,
-                                dtr.start.day),
+                                dtr.start.day,1,0,0),
                             end: DateTime(dtr.end.year, dtr.end.month,
-                                dtr.end.day));
+                                dtr.end.day,23,59,59));
                         tec.text =
-                            "${DateFormat("dd/MM/yyyy hh:mm:ss").format(curDtr.start)} - ${DateFormat("dd/MM/yyyy hh:mm:ss").format(curDtr.end)}";
+                            "${DateFormat("dd/MM/yyyy hh:mm aa").format(controller.curDtr.start)} - ${DateFormat("dd/MM/yyyy hh:mm aa").format(controller.curDtr.end)}";
                       }
                     },
                   )),
@@ -294,7 +314,7 @@ class TxScreen extends StatelessWidget {
               Expanded(
                   child: AppButton(
                 onPressed: () async {
-                  await controller.getAllPumpsTransaction(curDtr,pumpId: curPump);
+                  await controller.getAllPumpsTransaction();
                 },
                 text: "Apply",
               ))

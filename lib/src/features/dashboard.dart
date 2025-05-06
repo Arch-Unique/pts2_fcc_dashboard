@@ -119,22 +119,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // controller.initPTDataRaw();
                 return screens[controller.curMode.value];
               })),
-              Obx(() {
-                return CurvedContainer(
-                  padding: EdgeInsets.all(8),
-                  margin: EdgeInsets.all(8),
-                  color: controller.isConnected.value
-                      ? AppColors.primaryColor
-                      : AppColors.red,
-                  child: Center(
-                    child: AppText.thin(
-                        controller.isConnected.value
-                            ? "ONLINE - Last Refreshed: ${controller.lastRefreshedDate.value}"
-                            : "OFFLINE - Last Refreshed: ${controller.lastRefreshedDate.value}",
-                        alignment: TextAlign.center),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child:AppButton.outline(
+                       () async {
+                          await controller.initPTDataRaw();
+                        },
+                       "REFRESH",
+                       color: AppColors.grey
+                    ),
                   ),
-                );
-              })
+                  Expanded(
+                    flex: 2,
+                    child: Obx(() {
+                      return CurvedContainer(
+                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.all(12),
+                        color: controller.isConnected.value
+                            ? AppColors.primaryColor
+                            : AppColors.red,
+                        child: Center(
+                          child: AppText.thin(
+                              controller.isConnected.value
+                                  ? "ONLINE"
+                                  : "OFFLINE",
+                              alignment: TextAlign.center),
+                        ),
+                      );
+                    }),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Obx(() {
+                      return AppText.thin(
+                          "Last Refreshed (30s): ${controller.lastRefreshedDate.value}",
+                          alignment: TextAlign.center);
+                    }),
+                  )
+                ],
+              ),
             ],
           ),
         ),

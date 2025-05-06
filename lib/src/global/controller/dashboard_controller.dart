@@ -16,6 +16,11 @@ class DashboardController extends GetxController {
   RxInt curMode = 0.obs;
   final appRepo = Get.find<AppRepo>();
 
+  int curPump = 1;
+  DateTimeRange curDtr =
+      DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now());
+
+
   List<TextEditingController> tecs =
       List.generate(5, (i) => TextEditingController());
   final authKey = GlobalKey<FormState>();
@@ -84,7 +89,7 @@ class DashboardController extends GetxController {
 
       isConnected.value = true;
       lastRefreshedDate.value =
-          DateFormat("hh/MM/yyyy hh:mm:ss").format(DateTime.now());
+          DateFormat("hh/MM/yyyy hh:mm:ss aa").format(DateTime.now());
     } catch (e) {
       isConnected.value = false;
     }
@@ -131,17 +136,14 @@ class DashboardController extends GetxController {
     allTanks.value = tt.map((ttt) => TankModel.fromJson(ttt.data)).toList();
   }
 
-  getAllPumpsTransaction(
-    DateTimeRange dtr, {
-    int pumpId = 0,
-  }) async {
+  getAllPumpsTransaction() async {
     try {
       isLoading.value = true;
       final dt = await appRepo.getData([
         JsonPTSReq("ReportGetPumpTransactions", data: {
-          "Pump": pumpId,
-          "DateTimeStart": DateFormat("yyyy-MM-ddThh:mm:ss").format(dtr.start),
-          "DateTimeEnd": DateFormat("yyyy-MM-ddThh:mm:ss").format(dtr.end),
+          "Pump": curPump,
+          "DateTimeStart": DateFormat("yyyy-MM-ddThh:mm:ss").format(curDtr.start),
+          "DateTimeEnd": DateFormat("yyyy-MM-ddThh:mm:ss").format(curDtr.end),
         }),
       ]);
       final apt = (dt[0].data as List)
